@@ -53,4 +53,18 @@ class StoreTaskRequest extends FormRequest
             'priority.in'    => 'Priority must be "low", "medium", or "high".',
         ];
     }
+
+    /**
+     * Handle custom defaults after validation passes.
+     */
+    protected function passedValidation(): void
+    {
+        $this->merge([
+            'status'   => $this->input('status') ?? 'pending',
+            'priority' => $this->input('priority') ?? 'medium',
+        ]);
+
+        $this->validator->setValue('status', $this->input('status'));
+        $this->validator->setValue('priority', $this->input('priority'));
+    }
 }
