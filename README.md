@@ -23,7 +23,7 @@ A full-stack task management application built with **Laravel 11** (REST API) an
 
 | Layer    | Technology                           |
 |----------|--------------------------------------|
-| Backend  | PHP 8.3, Laravel 11, MySQL 8.0       |
+| Backend  | PHP 8.4, Laravel 11, MySQL 8.0       |
 | Frontend | Next.js 15, React 18, TypeScript     |
 | Styling  | Tailwind CSS                         |
 | State    | TanStack Query v5                    |
@@ -35,7 +35,7 @@ A full-stack task management application built with **Laravel 11** (REST API) an
 ## Project Structure
 
 ```
-taskflow/
+aucthux-technical-assessment/
 ├── backend/                  # Laravel 11 REST API
 │   ├── app/
 │   │   ├── Http/
@@ -84,7 +84,7 @@ taskflow/
 
 ```bash
 git clone <repo-url>
-cd taskflow
+cd aucthux-technical-assessment
 ```
 
 ### 2. Configure environment variables
@@ -138,7 +138,7 @@ docker compose exec backend php artisan db:seed
 | Service       | URL                         |
 |---------------|-----------------------------|
 | Frontend      | http://localhost:3000       |
-| Backend API   | http://localhost:8000/api   |
+| Backend API   | http://localhost:8000/api/tasks |
 
 ### Running Tests
 
@@ -159,7 +159,7 @@ Tests also run automatically via **GitHub Actions CI** on every push and pull re
 
 ## API Reference
 
-Base URL: `http://localhost:8000/api`
+Base URL: `http://localhost:8000/api/tasks`
 
 All responses use `application/json`.
 
@@ -290,27 +290,27 @@ No extra packages beyond default Laravel 11 — deliberately minimal to demonstr
 
 ## Architecture Decisions
 
-### Backend — Repository + Service Pattern
+### Backend - Repository + Service Pattern
 
 The controller delegates all business logic to a `TaskService`, which in turn talks to a `TaskRepositoryInterface`. This separation has three practical benefits:
 
-1. **Testability** — Unit tests can mock the repository without hitting the database.
-2. **Swappability** — Changing from MySQL to another store (e.g. PostgreSQL, or even in-memory for tests) only requires updating the binding in `AppServiceProvider`.
-3. **Single responsibility** — The controller handles HTTP concerns (request/response), the service handles business rules (e.g. duplicate detection), and the repository handles persistence.
+1. **Testability** - Unit tests can mock the repository without hitting the database.
+2. **Swappability** - Changing from MySQL to another store (e.g. PostgreSQL, or even in-memory for tests) only requires updating the binding in `AppServiceProvider`.
+3. **Single responsibility** - The controller handles HTTP concerns (request/response), the service handles business rules (e.g. duplicate detection), and the repository handles persistence.
 
-### Backend — API Resources
+### Backend - API Resources
 
 `TaskResource` ensures the JSON shape is always consistent regardless of how the internal model evolves. Adding a field to the model does not accidentally expose it to the API.
 
-### Frontend — App Router (Next.js 15)
+### Frontend - App Router (Next.js 15)
 
 App Router is the current standard and the direction of Next.js going forward. Server Components render the page shell with no client JS; the `TasksClient` component is marked `'use client'` only where interactivity is needed. This keeps the initial bundle small.
 
-### Frontend — TanStack Query v5
+### Frontend - TanStack Query v5
 
 TanStack Query manages all server state: caching, background refetching, and loading/error states. This removes the need for `useEffect` + `useState` boilerplate and provides a single source of truth for remote data. The query key factory (`taskKeys`) ensures consistent cache invalidation across create/update/delete mutations.
 
-### Frontend — API client abstraction
+### Frontend - API client abstraction
 
 All fetch calls are centralised in `src/lib/api.ts`. Components never call `fetch` directly — they go through typed functions (`taskApi.list`, `taskApi.create`, etc.). This makes it easy to swap the HTTP layer (e.g. add auth headers, switch to Axios) without touching components.
 
@@ -318,18 +318,18 @@ All fetch calls are centralised in `src/lib/api.ts`. Components never call `fetc
 
 ## What I Would Improve With More Time
 
-1. **Authentication** — Add Laravel Sanctum for token-based auth; protect routes with middleware; add login/register pages on the frontend.
+1. **Authentication** : Add Laravel Sanctum for token-based auth; protect routes with middleware; add login/register pages on the frontend.
 
-2. **Optimistic updates** — Currently mutations wait for the server before updating the UI. TanStack Query supports optimistic updates (immediate UI change, rollback on failure) for a snappier feel.
+2. **Optimistic updates** : Currently mutations wait for the server before updating the UI. TanStack Query supports optimistic updates (immediate UI change, rollback on failure) for a snappier feel.
 
-3. **Edit task in-place** — A modal or inline edit form on the task list, rather than navigating to a separate page.
+3. **Edit task in-place** : A modal or inline edit form on the task list, rather than navigating to a separate page.
 
-4. **Soft deletes** — Use `SoftDeletes` in Eloquent + a "Trash" view where tasks can be restored.
+4. **Soft deletes** : Use `SoftDeletes` in Eloquent + a "Trash" view where tasks can be restored.
 
-5. **Search** — A full-text search endpoint (`GET /api/tasks?search=keyword`) backed by a MySQL `FULLTEXT` index or Laravel Scout.
+5. **Search** : A full-text search endpoint (`GET /api/tasks?search=keyword`) backed by a MySQL `FULLTEXT` index or Laravel Scout.
 
-6. **More test coverage** — Add frontend integration tests with Playwright or React Testing Library. Add unit tests for `TaskService` with a mocked repository.
+6. **More test coverage** : Add frontend integration tests with Playwright or React Testing Library. Add unit tests for `TaskService` with a mocked repository.
 
-7. **CI/CD pipeline** — A GitHub Actions workflow that runs `php artisan test` and `npm run lint` on every pull request.
+7. **CI/CD pipeline** : A GitHub Actions workflow that runs `php artisan test` and `npm run lint` on every pull request.
 
-8. **Deployment** — Deploy backend to Laravel Forge / Railway, frontend to Vercel, with environment-specific configs.
+8. **Deployment** : Deploy backend to Laravel Forge / Railway, frontend to Vercel, with environment-specific configs.
