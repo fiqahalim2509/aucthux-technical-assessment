@@ -21,7 +21,7 @@ class TaskController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $filters = $request->only(['status', 'priority']);
+        $filters = $request->only(['status', 'priority', 'search']);
         $perPage = (int) $request->get('per_page', 15);
 
         $tasks = $this->taskService->getTasks($filters, min($perPage, 100));

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import { Preahvihear } from 'next/font/google';
 
 const PRIORITY_COLORS: Record<TaskPriority, string> = {
   low: 'bg-sky-100 text-sky-700',
@@ -27,6 +28,14 @@ export default function TasksClient() {
 
   function handlePriorityFilter(priority: TaskPriority | '') {
     setFilters((prev) => ({ ...prev, priority: priority || undefined, page: 1 }));
+  }
+
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    setFilters((prev) => ({
+      ...prev,
+      search: e.target.value || undefined,
+      page: 1,
+    }));
   }
 
   function handlePageChange(page: number) {
@@ -104,6 +113,12 @@ export default function TasksClient() {
               <option value="medium">Medium</option>
               <option value="high">High</option>
             </select>
+          </div>
+
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <input type="text" placeholder="Search tasks..." onChange={handleSearch} 
+              className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate 700 shadow-sm focus:border-brand-500 focus:outline-none">
+            </input>
           </div>
         </div>
 

@@ -19,6 +19,12 @@ class TaskRepository implements TaskRepositoryInterface
         return $this->model
             ->byStatus($filters['status'] ?? null)
             ->byPriority($filters['priority'] ?? null)
+            ->when(isset($filters['search']), function ($query) use ($filters) {
+                $query->where(function ($q) use ($filters) {
+                    $q->where('title', 'like', '%' .$filters['search'] . '%')
+                        ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+                });
+            })
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
     }

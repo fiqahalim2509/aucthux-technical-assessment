@@ -67,4 +67,9 @@ class TaskService
 
         return $this->taskRepository->delete($task);
     }
+
+    // public function findById(int $id): Task
+    // {
+    //     $task = $this->taskRepository->findById($id)
+    // } 
 }
