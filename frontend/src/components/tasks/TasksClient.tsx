@@ -31,11 +31,7 @@ export default function TasksClient() {
   }
 
   function handleSearch(search: string) {
-    setFilters((prev) => ({
-      ...prev,
-      search: e.target.value || undefined,
-      page: 1,
-    }));
+    setFilters((prev) => ({ ...prev, search: search || undefined, page: 1 }));
   }
 
   function handlePageChange(page: number) {
