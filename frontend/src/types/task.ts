@@ -32,6 +32,7 @@ export interface PaginatedResponse<T> {
 export interface TaskFilters {
   status?: TaskStatus | '';
   priority?: TaskPriority | '';
+  search?: string;
   page?: number;
   per_page?: number;
 }

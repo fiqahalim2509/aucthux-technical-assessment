@@ -30,7 +30,7 @@ export default function TasksClient() {
     setFilters((prev) => ({ ...prev, priority: priority || undefined, page: 1 }));
   }
 
-  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleSearch(search: string) {
     setFilters((prev) => ({
       ...prev,
       search: e.target.value || undefined,
@@ -116,9 +116,12 @@ export default function TasksClient() {
           </div>
 
           <div className="flex items-center gap-2 w-full sm:w-auto">
-            <input type="text" placeholder="Search tasks..." onChange={handleSearch} 
-              className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate 700 shadow-sm focus:border-brand-500 focus:outline-none">
-            </input>
+            <input
+              type="text"
+              placeholder="Search tasks..."
+              onChange={(e) => handleSearch(e.target.value)}
+              className="rounded-md border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 w-64"
+            />
           </div>
         </div>
 
